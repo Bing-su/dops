@@ -108,7 +108,6 @@ func appAction(c *cli.Context) error {
 		),
 		gocron.NewTask(onSix, handle),
 	)
-
 	if err != nil {
 		return err
 	}
@@ -129,7 +128,6 @@ func appAction(c *cli.Context) error {
 		),
 		gocron.NewTask(onTime, handle, baseurl, topic, message),
 	)
-
 	if err != nil {
 		return err
 	}
@@ -196,7 +194,8 @@ func createApp() *cli.App {
 					return nil
 				},
 			},
-		}}
+		},
+	}
 
 	return app
 }

@@ -13,5 +13,6 @@ repos:
     rev: v2024.06.05
     hooks:
       - id: staticcheck
-      - id: goimports
       - id: golangci-lint
+      - id: goimports
+      - id: gofumpt
