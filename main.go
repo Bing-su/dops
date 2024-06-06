@@ -60,7 +60,7 @@ func createApp() *cli.App {
 			&cli.StringFlag{
 				Name:        "baseurl",
 				Aliases:     []string{"b"},
-				Usage:       "base url for ntfy",
+				Usage:       "base `URL` for ntfy",
 				Value:       "https://ntfy.sh",
 				EnvVars:     []string{"DOPS_BASEURL"},
 				DefaultText: "https://ntfy.sh",
@@ -68,7 +68,7 @@ func createApp() *cli.App {
 			&cli.StringFlag{
 				Name:     "topic",
 				Aliases:  []string{"t"},
-				Usage:    "topic for the notification",
+				Usage:    "`TOPIC` for the notification",
 				EnvVars:  []string{"DOPS_TOPIC"},
 				Required: true,
 			},
@@ -89,7 +89,7 @@ func createApp() *cli.App {
 			&cli.StringSliceFlag{
 				Name:        "times",
 				Aliases:     []string{"T"},
-				Usage:       "times for the notification",
+				Usage:       "times for the notification (TT:MM, TT:MM:SS)",
 				Value:       cli.NewStringSlice("09:00", "21:00"),
 				DefaultText: "[09:00 21:00]",
 				Action: func(c *cli.Context, args []string) error {
