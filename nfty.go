@@ -9,7 +9,7 @@ import (
 
 const NTFY string = "https://ntfy.sh"
 
-func SendNtfy(baseurl string, topic string) error {
+func SendNtfy(baseurl string, topic string, message string) error {
 	if baseurl == "" {
 		baseurl = NTFY
 	}
@@ -25,7 +25,7 @@ func SendNtfy(baseurl string, topic string) error {
 
 	client := req.C()
 	resp, err := client.R().
-		SetBody("문제풀어!").
+		SetBody(message).
 		SetHeader("Title", "Problem Solving").
 		Post(url)
 
