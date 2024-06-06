@@ -72,7 +72,7 @@ func parseTime(s string) (time.Time, error) {
 	if err2 == nil {
 		return t2, nil
 	}
-	return time.Time{}, fmt.Errorf("invalid time format: %s (available formats: TT:MM, TT:MM:SS)", s)
+	return time.Time{}, fmt.Errorf("invalid time format: %s (available formats: HH:MM, HH:MM:SS)", s)
 }
 
 func appAction(c *cli.Context) error {
@@ -182,7 +182,7 @@ func createApp() *cli.App {
 			&cli.StringSliceFlag{
 				Name:        "times",
 				Aliases:     []string{"T"},
-				Usage:       "times for the notification (TT:MM, TT:MM:SS)",
+				Usage:       "times for the notification (HH:MM, HH:MM:SS)",
 				Value:       cli.NewStringSlice("09:00", "21:00"),
 				DefaultText: "[09:00 21:00]",
 				Action: func(c *cli.Context, args []string) error {
