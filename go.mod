@@ -1,4 +1,4 @@
-module github.com/Bing-su/do-ps
+module github.com/Bing-su/dops
 
 go 1.22
 
