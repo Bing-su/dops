@@ -100,7 +100,7 @@ func appAction(c *cli.Context) error {
 	}
 	defer func() { _ = scheduler.Shutdown() }()
 
-	_, err = scheduler.NewJob(
+	onSixJob, err := scheduler.NewJob(
 		gocron.DailyJob(
 			0,
 			gocron.NewAtTimes(
@@ -121,7 +121,7 @@ func appAction(c *cli.Context) error {
 		)
 	}
 
-	_, err = scheduler.NewJob(
+	onTimeJob, err := scheduler.NewJob(
 		gocron.DailyJob(
 			0,
 			gocron.NewAtTimes(atTimes[0], atTimes[1:]...),
@@ -136,6 +136,13 @@ func appAction(c *cli.Context) error {
 	log.Print(msg)
 	_ = SendNtfy(baseurl, topic, msg)
 	scheduler.Start()
+
+	nextOnSix, _ := onSixJob.NextRun()
+	nextOnTime, _ := onTimeJob.NextRun()
+
+	log.Printf("Current time: %s\n", time.Now().Format(time.RFC3339))
+	log.Printf("Next on six: %s\n", nextOnSix.Format(time.RFC3339))
+	log.Printf("Next on time: %s\n", nextOnTime.Format(time.RFC3339))
 
 	sigc := make(chan os.Signal, 1)
 	signal.Notify(sigc, os.Interrupt, syscall.SIGTERM)
