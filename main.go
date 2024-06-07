@@ -50,17 +50,17 @@ func onTime(handle string, baseurl string, topic string, message string) {
 		retry.Delay(1*time.Second),
 	)
 	if err != nil {
-		fmt.Printf("error: %v\n", err)
+		log.Printf("error: %v\n", err)
 		return
 	}
 
 	if userInfo.SolvedCount <= lastSolved {
 		err = SendNtfy(baseurl, topic, message)
-		log.Printf("send notification. solved count: %d\n", userInfo.SolvedCount)
 		if err != nil {
-			fmt.Printf("error: %v\n", err)
+			log.Printf("error: %v\n", err)
 		}
 	}
+	log.Printf("solved count: %d\n", userInfo.SolvedCount)
 }
 
 func parseTime(s string) (time.Time, error) {
