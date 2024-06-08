@@ -11,6 +11,8 @@ FROM alpine AS runner
 
 RUN apk add --no-cache -u tzdata
 
+ENV TZ=Asia/Seoul
+
 WORKDIR /app
 
 COPY --from=builder /app/dops .
