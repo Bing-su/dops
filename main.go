@@ -14,7 +14,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-var lastSolved int = 0
+var lastSolved int = 1_000_000
 
 func onSix(handle string) {
 	userInfo, err := retry.DoWithData(
@@ -29,11 +29,11 @@ func onSix(handle string) {
 		retry.Delay(1*time.Second),
 	)
 
-	if err == nil {
+	if err != nil {
+		log.Printf("error: %v\n", err)
+	} else {
 		lastSolved = userInfo.SolvedCount
 		log.Printf("lastSolved: %d\n", lastSolved)
-	} else {
-		log.Printf("error: %v\n", err)
 	}
 }
 
