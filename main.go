@@ -102,7 +102,7 @@ func appAction(c *cli.Context) error {
 
 	onSixJob, err := scheduler.NewJob(
 		gocron.DailyJob(
-			0,
+			1,
 			gocron.NewAtTimes(
 				gocron.NewAtTime(6, 0, 10)),
 		),
@@ -123,7 +123,7 @@ func appAction(c *cli.Context) error {
 
 	onTimeJob, err := scheduler.NewJob(
 		gocron.DailyJob(
-			0,
+			1,
 			gocron.NewAtTimes(atTimes[0], atTimes[1:]...),
 		),
 		gocron.NewTask(onTime, handle, baseurl, topic, message),
