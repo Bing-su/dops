@@ -132,6 +132,22 @@ func appAction(c *cli.Context) error {
 		return err
 	}
 
+	_, err = scheduler.NewJob(
+		gocron.CronJob(
+			"0 * * * *",
+			false,
+		),
+		gocron.NewTask(
+			func() {
+				log.Printf("Current time: %s\n", time.Now().Format(time.RFC3339))
+				log.Printf("Current solved count: %d\n", lastSolved)
+			},
+		),
+	)
+	if err != nil {
+		return err
+	}
+
 	msg := fmt.Sprintf("Scheduler started with values: baseurl=%s, topic=%s, handle=%s, message=%s, times=%v\n", baseurl, topic, handle, message, times)
 	log.Print(msg)
 	_ = SendNtfy(baseurl, topic, msg)
