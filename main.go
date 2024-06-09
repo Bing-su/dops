@@ -1,10 +1,12 @@
 package main
 
 import (
+	_ "embed"
 	"fmt"
 	"log"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 	_ "time/tzdata"
@@ -14,7 +16,10 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-var lastSolved int = 1_000_000
+//go:embed VERSION
+var Version string
+
+var lastSolved int = 10_000_000
 
 func onSix(handle string) {
 	userInfo, err := retry.DoWithData(
@@ -145,10 +150,13 @@ func appAction(c *cli.Context) error {
 }
 
 func createApp() *cli.App {
+	version := fmt.Sprintf("v%s", strings.TrimSpace(Version))
+
 	app := &cli.App{
-		Name:   "dops",
-		Usage:  "send do problem solving notification",
-		Action: appAction,
+		Name:    "dops",
+		Usage:   "send do problem solving notification",
+		Version: version,
+		Action:  appAction,
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:        "baseurl",
