@@ -33,7 +33,7 @@ func onSix(handle string) {
 		log.Printf("error: %v\n", err)
 	} else {
 		lastSolved = userInfo.SolvedCount
-		log.Printf("lastSolved: %d\n", lastSolved)
+		log.Printf("solved count: %d\n", lastSolved)
 	}
 }
 
@@ -60,7 +60,6 @@ func onTime(handle string, baseurl string, topic string, message string) {
 			log.Printf("error: %v\n", err)
 		}
 	}
-	log.Printf("solved count: %d\n", userInfo.SolvedCount)
 }
 
 func parseTime(s string) (time.Time, error) {
@@ -100,7 +99,7 @@ func appAction(c *cli.Context) error {
 	}
 	defer func() { _ = scheduler.Shutdown() }()
 
-	onSixJob, err := scheduler.NewJob(
+	_, err = scheduler.NewJob(
 		gocron.DailyJob(
 			1,
 			gocron.NewAtTimes(
@@ -121,7 +120,7 @@ func appAction(c *cli.Context) error {
 		)
 	}
 
-	onTimeJob, err := scheduler.NewJob(
+	_, err = scheduler.NewJob(
 		gocron.DailyJob(
 			1,
 			gocron.NewAtTimes(atTimes[0], atTimes[1:]...),
@@ -132,33 +131,10 @@ func appAction(c *cli.Context) error {
 		return err
 	}
 
-	_, err = scheduler.NewJob(
-		gocron.CronJob(
-			"0 * * * *",
-			false,
-		),
-		gocron.NewTask(
-			func() {
-				log.Printf("Current time: %s\n", time.Now().Format(time.RFC3339))
-				log.Printf("Current solved count: %d\n", lastSolved)
-			},
-		),
-	)
-	if err != nil {
-		return err
-	}
-
 	msg := fmt.Sprintf("Scheduler started with values: baseurl=%s, topic=%s, handle=%s, message=%s, times=%v\n", baseurl, topic, handle, message, times)
 	log.Print(msg)
 	_ = SendNtfy(baseurl, topic, msg)
 	scheduler.Start()
-
-	nextOnSix, _ := onSixJob.NextRun()
-	nextOnTime, _ := onTimeJob.NextRun()
-
-	log.Printf("Current time: %s\n", time.Now().Format(time.RFC3339))
-	log.Printf("Next on six: %s\n", nextOnSix.Format(time.RFC3339))
-	log.Printf("Next on time: %s\n", nextOnTime.Format(time.RFC3339))
 
 	sigc := make(chan os.Signal, 1)
 	signal.Notify(sigc, os.Interrupt, syscall.SIGTERM)
