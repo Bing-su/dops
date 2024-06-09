@@ -84,9 +84,10 @@ func appAction(c *cli.Context) error {
 	parsedTimes := []time.Time{}
 	for _, s := range times {
 		t, err := parseTime(s)
-		if err == nil {
-			parsedTimes = append(parsedTimes, t)
+		if err != nil {
+			continue
 		}
+		parsedTimes = append(parsedTimes, t)
 	}
 
 	tz, err := time.LoadLocation("Asia/Seoul")
@@ -123,7 +124,7 @@ func appAction(c *cli.Context) error {
 	_, err = scheduler.NewJob(
 		gocron.DailyJob(
 			1,
-			gocron.NewAtTimes(atTimes[0], atTimes[1:]...),
+			func() []gocron.AtTime { return atTimes },
 		),
 		gocron.NewTask(onTime, handle, baseurl, topic, message),
 	)
