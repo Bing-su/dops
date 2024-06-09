@@ -17,9 +17,13 @@ import (
 )
 
 //go:embed VERSION
-var Version string
+var version string
 
 var lastSolved int = 10_000_000
+
+func GetVersion() string {
+	return strings.TrimSpace(version)
+}
 
 func getUserInfoWithRetry(handle string) (*UserInfo, error) {
 	return retry.DoWithData(
@@ -143,12 +147,12 @@ func appAction(c *cli.Context) error {
 }
 
 func createApp() *cli.App {
-	version := fmt.Sprintf("v%s", strings.TrimSpace(Version))
+	ver := fmt.Sprintf("v%s", GetVersion())
 
 	app := &cli.App{
 		Name:    "dops",
 		Usage:   "send do problem solving notification",
-		Version: version,
+		Version: ver,
 		Action:  appAction,
 		Flags: []cli.Flag{
 			&cli.StringFlag{
