@@ -21,8 +21,8 @@ var Version string
 
 var lastSolved int = 10_000_000
 
-func onSix(handle string) {
-	userInfo, err := retry.DoWithData(
+func getUserInfoWithRetry(handle string) (*UserInfo, error) {
+	return retry.DoWithData(
 		func() (*UserInfo, error) {
 			info, err := GetUserInfo(handle)
 			if err != nil {
@@ -33,7 +33,10 @@ func onSix(handle string) {
 		retry.Attempts(3),
 		retry.Delay(1*time.Second),
 	)
+}
 
+func onSix(handle string) {
+	userInfo, err := getUserInfoWithRetry(handle)
 	if err != nil {
 		log.Printf("error: %v\n", err)
 	} else {
@@ -43,17 +46,7 @@ func onSix(handle string) {
 }
 
 func onTime(handle string, baseurl string, topic string, message string) {
-	userInfo, err := retry.DoWithData(
-		func() (*UserInfo, error) {
-			info, err := GetUserInfo(handle)
-			if err != nil {
-				return nil, err
-			}
-			return info, nil
-		},
-		retry.Attempts(3),
-		retry.Delay(1*time.Second),
-	)
+	userInfo, err := getUserInfoWithRetry(handle)
 	if err != nil {
 		log.Printf("error: %v\n", err)
 		return
